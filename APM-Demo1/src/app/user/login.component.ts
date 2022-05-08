@@ -25,7 +25,8 @@ export class LoginComponent implements OnInit {
         if (users) {
           this.maskUserName = users.maskUserName;
         }
-      });
+      }
+    )
   }
 
   cancel(): void {
