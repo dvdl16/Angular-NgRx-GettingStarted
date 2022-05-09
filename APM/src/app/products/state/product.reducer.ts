@@ -2,6 +2,7 @@ import { on, createReducer, createFeatureSelector, createSelector } from "@ngrx/
 import { Product } from "../product";
 import * as AppState from '../../state/app.state';
 import * as ProductActions from "./product.actions";
+import { state } from "@angular/animations";
 
 
 export interface State extends AppState.State {
@@ -12,12 +13,14 @@ export interface ProductState {
     showProductCode: boolean;
     currentProduct: Product;
     products: Product[];
+    error: string;
 }
 
 const initialState: ProductState = {
     showProductCode: true,
     currentProduct: null,
-    products: []
+    products: [],
+    error: ''
 }
 
 // Selectors
@@ -38,6 +41,12 @@ export const getProducts = createSelector(
     state => state.products
 )
 
+export const getError = createSelector(
+    getProductFeatureState,
+    state => state.error
+)
+
+// Reducer
 export const productReducer = createReducer<ProductState>(
     initialState,
     on(ProductActions.toggleProductCode, (state): ProductState => {
@@ -73,7 +82,15 @@ export const productReducer = createReducer<ProductState>(
     on(ProductActions.loadProductsSuccess, (state, action): ProductState => {
         return {
             ...state,
-            products: action.products
+            products: action.products,
+            error: ''
+        }
+    }),
+    on(ProductActions.loadProductsFailure, (state, action): ProductState => {
+        return {
+            ...state,
+            products: [],
+            error: action.error
         }
     })
 )
